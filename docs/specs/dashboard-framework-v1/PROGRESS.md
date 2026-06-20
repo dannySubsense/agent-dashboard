@@ -25,6 +25,10 @@
 ## Carry-Forward Notes
 
 - `src/app/layout.tsx` "Last fetched" header shows layout render time, not data fetch time — fix before any real panel renders data (Frank note, Slice 1)
+- `src/lib/github.ts getMergedPrs` — fetches only 50 most-recently-updated closed PRs; merged PRs can fall off page 1 on busy repos; document ceiling (Frank note, Slices 2–5)
+- `src/lib/git.ts getGitHubRemote` — regex forbids dots in repo names (`[^/\n.]+?`); repos like `user.github.io` silently return null (Frank note, Slices 2–5)
+- `src/lib/lore.ts getLastCapturePerProject` — no LIMIT; pulls all docs and dedups in app code; switch to `DISTINCT ON (project_id)` as LORE grows (Frank note, Slices 2–5)
+- `src/lib/env.ts requireEnv` name implies it throws — it doesn't; rename to `envOrWarn` when convenient (Frank note, Slices 2–5)
 
 ## Schema Verification (Slice 3 Done-When)
 
