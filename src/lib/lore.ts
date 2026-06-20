@@ -3,7 +3,9 @@
  *
  * All direct Postgres queries to the LORE database on VM 103.
  * Single pg.Pool instance initialized at module load from LORE_DATABASE_URL.
- * All functions catch errors and return null / [] / empty Map — never throw to caller.
+ * `getLastCapturePerProject`, `getActiveHaltsByProject`, `getLoreActivityEvents` catch all
+ * errors and return null / [] / empty Map. `getSessionCloses` and `getAgentRegistry` do NOT
+ * catch errors — connection/query failures propagate so API routes can serve stale data.
  *
  * Schema probe result (2026-06-20):
  *   Table: documents
@@ -180,41 +182,37 @@ export async function getSessionCloses(
   projectIds: string[],
 ): Promise<Map<string, SessionClose>> {
   if (projectIds.length === 0) return new Map()
-  try {
-    const result = await pool.query<{
-      id: string
-      project_id: string
-      title: string | null
-      content: string | null
-      created_at: Date
-    }>(
-      `SELECT id, project_id, title, content, created_at
-       FROM documents
-       WHERE project_id = ANY($1)
-         AND document_type = 'decision'
-         AND title ILIKE '%SESSION-CLOSE%'
-       ORDER BY created_at DESC`,
-      [projectIds],
-    )
 
-    const map = new Map<string, SessionClose>()
-    for (const row of result.rows) {
-      // ORDER BY created_at DESC — first occurrence per project_id is the most recent
-      if (!map.has(row.project_id)) {
-        map.set(row.project_id, {
-          projectId: row.project_id,
-          repoName: row.project_id, // LORE DB has no repoName; use projectId as proxy
-          timestamp: new Date(row.created_at),
-          title: row.title ?? '',
-          content: row.content ?? '',
-        })
-      }
+  const result = await pool.query<{
+    id: string
+    project_id: string
+    title: string | null
+    content: string | null
+    created_at: Date
+  }>(
+    `SELECT id, project_id, title, content, created_at
+     FROM documents
+     WHERE project_id = ANY($1)
+       AND document_type = 'decision'
+       AND title ILIKE '%SESSION-CLOSE%'
+     ORDER BY created_at DESC`,
+    [projectIds],
+  )
+
+  const map = new Map<string, SessionClose>()
+  for (const row of result.rows) {
+    // ORDER BY created_at DESC — first occurrence per project_id is the most recent
+    if (!map.has(row.project_id)) {
+      map.set(row.project_id, {
+        projectId: row.project_id,
+        repoName: row.project_id, // LORE DB has no repoName; use projectId as proxy
+        timestamp: new Date(row.created_at),
+        title: row.title ?? '',
+        content: row.content ?? '',
+      })
     }
-    return map
-  } catch (err) {
-    console.error('[lore] getSessionCloses error:', err)
-    return new Map()
   }
+  return map
 }
 
 // ── getAgentRegistry ──────────────────────────────────────────────────────
@@ -225,33 +223,28 @@ export async function getSessionCloses(
  * switchboardStatus is 'unknown' for all entries; the caller enriches it via isAgentOnline.
  */
 export async function getAgentRegistry(): Promise<AgentRecord[]> {
-  try {
-    const result = await pool.query<LoreAgentDocument>(
-      `SELECT id, author, title, content, status
-       FROM documents
-       WHERE project_id = 'lore-personal'
-         AND document_type = 'spec'
-       ORDER BY created_at DESC`,
-    )
+  const result = await pool.query<LoreAgentDocument>(
+    `SELECT id, author, title, content, status
+     FROM documents
+     WHERE project_id = 'lore-personal'
+       AND document_type = 'spec'
+     ORDER BY created_at DESC`,
+  )
 
-    const seen = new Set<string>()
-    const records: AgentRecord[] = []
+  const seen = new Set<string>()
+  const records: AgentRecord[] = []
 
-    for (const row of result.rows) {
-      const record = parseAgentDocument(row)
-      if (!record) continue
-      // First seen = most recent (ORDER BY created_at DESC)
-      if (seen.has(record.name)) continue
-      seen.add(record.name)
-      records.push(record)
-    }
-
-    records.sort((a, b) => a.name.localeCompare(b.name))
-    return records
-  } catch (err) {
-    console.error('[lore] getAgentRegistry error:', err)
-    return []
+  for (const row of result.rows) {
+    const record = parseAgentDocument(row)
+    if (!record) continue
+    // First seen = most recent (ORDER BY created_at DESC)
+    if (seen.has(record.name)) continue
+    seen.add(record.name)
+    records.push(record)
   }
+
+  records.sort((a, b) => a.name.localeCompare(b.name))
+  return records
 }
 
 // ── getLoreActivityEvents ─────────────────────────────────────────────────

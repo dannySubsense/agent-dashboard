@@ -14,7 +14,7 @@
 - [x] Slice 3 — LORE data layer (Postgres, 5 query fns, parseAgentDocument) — COMPLETE (2026-06-20, Frank-approved, schema verified on VM 103)
 - [x] Slice 4 — GitHub data layer (octokit/rest, owner/repo from githubRemote) — COMPLETE (2026-06-20, Frank-approved)
 - [x] Slice 5 — Switchboard + filesystem data layer — COMPLETE (2026-06-20, Frank-approved)
-- [ ] Slice 6 — 6 API routes (all data layers consumed here)
+- [x] Slice 6 — 6 API routes (all data layers consumed here) — COMPLETE (2026-06-20, Frank-approved, 92/92 tests)
 - [ ] Slice 7 — ProjectCardsPanel + ProjectCard + src/lib/projects.ts
 - [ ] Slice 8 — DdrPipelinePanel + SessionClosePanel
 - [ ] Slice 9 — ActivityFeedLoader + ActivityFeedPanel (client component)
