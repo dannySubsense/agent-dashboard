@@ -12,6 +12,7 @@ Living backlog and build-order rationale for the agent-dashboard project.
 | 006 | Agent Status Panel | BACKLOG | tbd | 002 | Feature |
 | 007 | Open Work Tracker | BACKLOG | tbd | 002 | Feature |
 | 008 | "Where Did I Leave Off?" Panel | BACKLOG | tbd | 002 | Feature |
+| 009 | Bootstrap Skill v1.1 Fixes | DRAFT | bootstrap-skill-v1-1 | 001 | Platform tooling |
 
 ---
 
@@ -26,6 +27,8 @@ Living backlog and build-order rationale for the agent-dashboard project.
 **DDR-004–008** can be sequenced flexibly once 003 ships. Simpler panels (004, 007) may batch into a single sprint; richer panels (005, 006, 008) each warrant their own.
 
 **DDR-001 and DDR-002 sprints run in parallel** — they are independent.
+
+**DDR-009** corrects two omissions from bootstrap-skill-v1 (DDR-001): the DDR index is now staged in the bootstrap commit, and projectContext is collected as a 5th input field to complete CLAUDE.md on first run.
 
 ---
 
