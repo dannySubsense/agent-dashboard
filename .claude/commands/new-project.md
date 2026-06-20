@@ -375,3 +375,70 @@ Before writing, verify that zero placeholder strings of the form `<ALL-CAPS-WITH
 Write the resolved content to `MACHINE-SETUP.md` in the project root using the Write tool.
 
 Note: `MACHINE-SETUP.md` is gitignored by Step 7 and must never appear in any commit.
+
+---
+
+## Step 7 — .gitignore Creation
+
+Write `.gitignore` to the project root with exactly these 7 entries in this order, one per line:
+
+```
+CLAUDE.md
+MACHINE-SETUP.md
+.env
+.env*.local
+node_modules/
+.next/
+dist/
+```
+
+No entries may be omitted. Additional project-specific entries may follow but the seven above must appear first.
+
+---
+
+## Step 8 — Git Initialization
+
+Execute the following 4 commands in sequence:
+
+```bash
+git init
+git branch -m main
+git config user.email "danny@subsense.art"
+git config user.name "dannySubsense"
+```
+
+The `--global` and `--system` flags are prohibited in this step and in all git config calls throughout this command. git config must always be scoped per-repo.
+
+Verification: run `git config --list | grep user` — output must show `danny@subsense.art` and `dannySubsense`.
+
+---
+
+## Step 9 — GitHub Repo Creation
+
+Run:
+
+```bash
+gh repo create dannySubsense/<InputBundle.repoName> \
+  --<InputBundle.visibility> \
+  --description "<InputBundle.repoDescription>"
+```
+
+Error handling:
+
+- HALT on any non-zero exit code — surface the exact gh CLI error to Danny.
+- Name conflict special case: if the error indicates the repo name is already taken, present the error to Danny, accept an alternate repo name, update `InputBundle.repoName`, and retry this step once. All other errors: HALT without retry.
+- On success: confirm the repo URL returned by gh CLI to Danny.
+
+---
+
+## Step 10 — SSH Remote Configuration
+
+Run:
+
+```bash
+git remote add origin "git@github.com-danny:dannySubsense/<InputBundle.repoName>.git"
+```
+
+Verification: run `git remote -v` — output must show `origin` using the `github.com-danny` SSH alias.
+
+If the remote add fails for any reason, HALT and surface the exact error to Danny.
