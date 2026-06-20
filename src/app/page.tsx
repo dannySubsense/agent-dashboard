@@ -1,6 +1,10 @@
 import { Suspense } from 'react';
 import { DashboardGrid } from '@/components/layout/DashboardGrid';
 import { PanelSkeleton } from '@/components/shared/PanelSkeleton';
+import { ProjectCardsPanel } from '@/components/panels/ProjectCardsPanel';
+import { DdrPipelinePanel } from '@/components/panels/DdrPipelinePanel';
+import { SessionClosePanel } from '@/components/panels/SessionClosePanel';
+import { ActivityFeedLoader } from '@/components/panels/ActivityFeedLoader';
 
 // Slice 1 stub — placeholder divs at correct grid positions.
 // Real panel components are wired in Slices 7, 8, 9, 10.
@@ -11,9 +15,7 @@ export default function DashboardPage() {
       {/* Row 1: ProjectCards cols 1–8 */}
       <div className="col-span-8">
         <Suspense fallback={<PanelSkeleton />}>
-          <div className="rounded-lg border border-border bg-card p-4 h-48 flex items-center justify-center text-muted-foreground text-sm">
-            Project Cards Placeholder
-          </div>
+          <ProjectCardsPanel />
         </Suspense>
       </div>
 
@@ -29,18 +31,14 @@ export default function DashboardPage() {
       {/* Row 2: DdrPipeline cols 1–12 */}
       <div className="col-span-12">
         <Suspense fallback={<PanelSkeleton />}>
-          <div className="rounded-lg border border-border bg-card p-4 h-48 flex items-center justify-center text-muted-foreground text-sm">
-            DDR Pipeline Placeholder
-          </div>
+          <DdrPipelinePanel />
         </Suspense>
       </div>
 
       {/* Row 3: SessionClose cols 1–6 */}
       <div className="col-span-6">
         <Suspense fallback={<PanelSkeleton />}>
-          <div className="rounded-lg border border-border bg-card p-4 h-48 flex items-center justify-center text-muted-foreground text-sm">
-            Session Close Placeholder
-          </div>
+          <SessionClosePanel />
         </Suspense>
       </div>
 
@@ -56,9 +54,7 @@ export default function DashboardPage() {
       {/* Row 4: ActivityFeed cols 1–12 */}
       <div className="col-span-12">
         <Suspense fallback={<PanelSkeleton />}>
-          <div className="rounded-lg border border-border bg-card p-4 h-48 flex items-center justify-center text-muted-foreground text-sm">
-            Activity Feed Placeholder
-          </div>
+          <ActivityFeedLoader />
         </Suspense>
       </div>
     </DashboardGrid>

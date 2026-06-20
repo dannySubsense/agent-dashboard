@@ -15,9 +15,9 @@
 - [x] Slice 4 — GitHub data layer (octokit/rest, owner/repo from githubRemote) — COMPLETE (2026-06-20, Frank-approved)
 - [x] Slice 5 — Switchboard + filesystem data layer — COMPLETE (2026-06-20, Frank-approved)
 - [x] Slice 6 — 6 API routes (all data layers consumed here) — COMPLETE (2026-06-20, Frank-approved, 92/92 tests)
-- [ ] Slice 7 — ProjectCardsPanel + ProjectCard + src/lib/projects.ts
-- [ ] Slice 8 — DdrPipelinePanel + SessionClosePanel
-- [ ] Slice 9 — ActivityFeedLoader + ActivityFeedPanel (client component)
+- [x] Slice 7 — ProjectCardsPanel + ProjectCard + src/lib/projects.ts — COMPLETE (2026-06-20, Frank-approved)
+- [x] Slice 8 — DdrPipelinePanel + SessionClosePanel — COMPLETE (2026-06-20, Frank-approved)
+- [x] Slice 9 — ActivityFeedLoader + ActivityFeedPanel (client component) — COMPLETE (2026-06-20, Frank-approved)
 - [ ] Slice 10 — AgentStatusPanel + OpenWorkPanel + PM2 config + deployment smoke test
 
 ---
