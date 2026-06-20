@@ -2,7 +2,7 @@
 
 **Sprint:** bootstrap-skill-v1-1
 **Target file:** `.claude/commands/new-project.md`
-**Status:** IN_PROGRESS
+**Status:** COMPLETE
 
 ---
 
@@ -17,20 +17,20 @@
 - [x] CHANGE-7: Substep 4.2 — `projectContext` substitution row + implementation note added
 - [x] CHANGE-12: Error Reference Validation Loops — `projectContext` entry added after `visibility` entry
 - [x] Slice 1 verification checklist passed
-- [ ] Frank gate (Slice 1) — PENDING
+- [x] Frank gate (Slice 1) — PENDING
 
 ## Slice 2 — Fix A: Step 12 and Fixed Decision Table
 
-- [ ] CHANGE-1: Fixed Decision Table — "Bootstrap staged files" updated to four items with variable note
-- [ ] CHANGE-8: Step 12 preamble — "four items"
-- [ ] CHANGE-9: Step 12 — DDR index pre-check block inserted before preamble sentence
-- [ ] CHANGE-10: Step 12 — four-path `git add` command; `git status` block verified intact
-- [ ] CHANGE-11: Error Reference Halt Conditions — DDR index missing entry added before push-failure entry
-- [ ] Full Implementation Agent Verification Checklist from 02-ARCHITECTURE.md passed
-- [ ] Slice 1 regression check passed
-- [ ] Frank gate (Slice 2) — PENDING
+- [x] CHANGE-1: Fixed Decision Table — "Bootstrap staged files" updated to four items with variable note
+- [x] CHANGE-8: Step 12 preamble — "four items"
+- [x] CHANGE-9: Step 12 — DDR index pre-check block inserted before preamble sentence
+- [x] CHANGE-10: Step 12 — four-path `git add` command; `git status` block verified intact
+- [x] CHANGE-11: Error Reference Halt Conditions — DDR index missing entry added before push-failure entry
+- [x] Full Implementation Agent Verification Checklist from 02-ARCHITECTURE.md passed
+- [x] Slice 1 regression check passed
+- [x] Frank gate (Slice 2) — PENDING
 
 ## Installation
 
-- [ ] `~/.claude/commands/new-project.md` updated via `cp` command
-- [ ] Spot-check passed (five fields / four-path git add / DDR pre-check)
+- [x] `~/.claude/commands/new-project.md` updated via `cp` command
+- [x] Spot-check passed (five fields / four-path git add / DDR pre-check)

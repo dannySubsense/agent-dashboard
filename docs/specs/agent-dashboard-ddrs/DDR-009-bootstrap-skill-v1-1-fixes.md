@@ -1,6 +1,6 @@
 # DDR-009 — Bootstrap Skill v1.1 Fixes
 
-- **Status:** DRAFT
+- **Status:** ACCEPTED (shipped, PR #— commit 07f5fb5)
 - **Author:** lumen
 - **Date:** 2026-06-20
 - **Sprint (on approval):** bootstrap-skill-v1-1
