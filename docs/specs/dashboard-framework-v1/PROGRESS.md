@@ -1,7 +1,7 @@
 # PROGRESS.md — dashboard-framework-v1
 
 **Sprint:** dashboard-framework-v1
-**Status:** IN PROGRESS
+**Status:** COMPLETE
 **DDR:** DDR-002 (ACCEPTED 2026-06-20)
 **Frank gate:** APPROVED 2026-06-20
 
@@ -18,7 +18,7 @@
 - [x] Slice 7 — ProjectCardsPanel + ProjectCard + src/lib/projects.ts — COMPLETE (2026-06-20, Frank-approved)
 - [x] Slice 8 — DdrPipelinePanel + SessionClosePanel — COMPLETE (2026-06-20, Frank-approved)
 - [x] Slice 9 — ActivityFeedLoader + ActivityFeedPanel (client component) — COMPLETE (2026-06-20, Frank-approved)
-- [ ] Slice 10 — AgentStatusPanel + OpenWorkPanel + PM2 config + deployment smoke test
+- [x] Slice 10 — AgentStatusPanel + OpenWorkPanel + PM2 config + deployment smoke test — COMPLETE (2026-06-20)
 
 ---
 

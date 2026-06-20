@@ -74,8 +74,8 @@ export function isAgentOnline(
 
   // lastActiveAt may be absent in older session entries (the real ~/.switchboard/
   // sessions.json uses startedAt + cwd + pid without a heartbeat timestamp).
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- real shape may differ from type
-  const lastActiveAt: string | undefined = (session as any).lastActiveAt;
+  // The type says string but runtime JSON may omit this field.
+  const lastActiveAt = session.lastActiveAt;
   if (!lastActiveAt) {
     return 'unknown';
   }

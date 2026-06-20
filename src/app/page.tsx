@@ -2,8 +2,10 @@ import { Suspense } from 'react';
 import { DashboardGrid } from '@/components/layout/DashboardGrid';
 import { PanelSkeleton } from '@/components/shared/PanelSkeleton';
 import { ProjectCardsPanel } from '@/components/panels/ProjectCardsPanel';
+import { AgentStatusPanel } from '@/components/panels/AgentStatusPanel';
 import { DdrPipelinePanel } from '@/components/panels/DdrPipelinePanel';
 import { SessionClosePanel } from '@/components/panels/SessionClosePanel';
+import { OpenWorkPanel } from '@/components/panels/OpenWorkPanel';
 import { ActivityFeedLoader } from '@/components/panels/ActivityFeedLoader';
 
 // Slice 1 stub — placeholder divs at correct grid positions.
@@ -22,9 +24,7 @@ export default function DashboardPage() {
       {/* Row 1: AgentStatus cols 9–12 */}
       <div className="col-span-4">
         <Suspense fallback={<PanelSkeleton />}>
-          <div className="rounded-lg border border-border bg-card p-4 h-48 flex items-center justify-center text-muted-foreground text-sm">
-            Agent Status Placeholder
-          </div>
+          <AgentStatusPanel />
         </Suspense>
       </div>
 
@@ -45,9 +45,7 @@ export default function DashboardPage() {
       {/* Row 3: OpenWork cols 7–12 */}
       <div className="col-span-6">
         <Suspense fallback={<PanelSkeleton />}>
-          <div className="rounded-lg border border-border bg-card p-4 h-48 flex items-center justify-center text-muted-foreground text-sm">
-            Open Work Placeholder
-          </div>
+          <OpenWorkPanel />
         </Suspense>
       </div>
 
