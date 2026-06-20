@@ -25,7 +25,7 @@ These values are locked. Never ask Danny about them.
 | HOMELAB-CLAUDE.md template filename | `HOMELAB-CLAUDE.md.template` |
 | MACHINE-SETUP.md template filename | `MACHINE-SETUP.md.template` |
 | Bootstrap commit message | `chore: project bootstrap` |
-| Bootstrap staged files | `.gitignore`, `HOMELAB-CLAUDE.md.template`, `.claude/commands/relay.md` |
+| Bootstrap staged files | `.gitignore`, `HOMELAB-CLAUDE.md.template`, `.claude/commands/relay.md`, `docs/specs/<InputBundle.projectId>-ddrs/00-DDR-INDEX.md` (path is variable — `<InputBundle.projectId>` is resolved at runtime) |
 | LORE documentType (bootstrap) | `decision` |
 | LORE epistemicType (bootstrap) | `FACT` |
 | LORE status (bootstrap) | `locked` |
@@ -48,6 +48,7 @@ Danny must supply the following fields before any action proceeds. All fields mu
 | `projectId` | Kebab-case; must match `/^[a-z][a-z0-9-]+[a-z0-9]$/`; becomes LORE `projectId` and DDR path prefix |
 | `repoDescription` | One sentence; passed verbatim to `gh repo create --description` |
 | `visibility` | Exactly `public` or `private` — no other values accepted |
+| `projectContext` | One paragraph: what does this project own, build, or solve? Passed verbatim into the HOMELAB-CLAUDE.md.template project context placeholder. |
 | `repoName` | Derived: equals `projectId` — the GitHub repository name under `dannySubsense/`. Not collected from Danny. |
 | `agentName` | Declared by the executing agent during Step 2 (vision quest) — NOT collected from Danny upfront; agent proposes, Danny confirms |
 
@@ -110,7 +111,7 @@ Pre-flight runs after Step 1 input confirmation and before Step 2 (vision quest)
 
 ## Step 1 — Input Gathering
 
-Prompt Danny for the four InputBundle fields, validate each, confirm the bundle, and run a LORE collision check. No files are written and no commands run during this step.
+Prompt Danny for the five InputBundle fields, validate each, confirm the bundle, and run a LORE collision check. No files are written and no commands run during this step.
 
 ### Substep 1.1 — Prompt for fields
 
@@ -120,6 +121,9 @@ Ask Danny to provide:
 - `projectId` — kebab-case identifier (e.g. `"agent-dashboard"`); becomes the LORE `projectId` and DDR path prefix
 - `repoDescription` — one sentence; passed verbatim to `gh repo create --description`
 - `visibility` — exactly `public` or `private`
+- `projectContext` — one paragraph describing what this project owns, builds, or solves; passed verbatim into the HOMELAB-CLAUDE.md.template project context placeholder
+
+If Danny provides an empty string or whitespace-only value for `projectContext`, re-prompt for `projectContext` only. All other previously collected fields are retained. Repeat until a non-empty value is provided.
 
 ### Substep 1.2 — Validate projectId
 
@@ -139,6 +143,7 @@ projectId:       <value>
 repoName:        <value>  (derived from projectId)
 repoDescription: <value>
 visibility:      <value>
+projectContext:  <value>
 ```
 
 Await Danny's explicit confirmation before proceeding. **No irreversible action proceeds until Danny confirms the full InputBundle.**
@@ -304,6 +309,12 @@ Substitute all placeholders using the following map:
 | `<AGENT-NAME>` | `AgentIdentity.slug` |
 | `<REPO-NAME>` | `InputBundle.repoName` |
 | `<PROJECT-ID>` | `InputBundle.projectId` |
+| `<One paragraph: what does this project own, what stack layer is it, how does it relate to the broader system.>` | `InputBundle.projectContext` |
+
+**Implementation note — projectContext placeholder safety gate:** The token in the row above is a prose string, not `<ALL-CAPS-WITH-HYPHENS>`. Substep 4.3's zero-placeholder check does not match it. Apply these two checks explicitly:
+
+1. Before substitution: verify the exact token string `<One paragraph: what does this project own, what stack layer is it, how does it relate to the broader system.>` occurs at least once in the template content read in Substep 4.1. If zero occurrences are found, the template has changed — **HALT:** `projectContext placeholder token not found in HOMELAB-CLAUDE.md.template. Template may have changed. Verify token and update Substep 4.2 before proceeding.`
+2. After substitution: verify the exact token string no longer appears in the resolved content. If it still appears, the substitution failed — do not proceed to Substep 4.3 or Substep 4.4.
 
 ### Substep 4.3 — Zero-placeholder verification
 
@@ -466,10 +477,20 @@ Write `docs/specs/<InputBundle.projectId>-ddrs/00-DDR-INDEX.md` with this exact 
 
 ## Step 12 — Initial Commit and Push
 
-Stage exactly these three items — no others:
+Before staging, verify that the DDR index file created in Step 11 exists:
 
 ```bash
-git add .gitignore HOMELAB-CLAUDE.md.template .claude/commands/relay.md
+ls docs/specs/<InputBundle.projectId>-ddrs/00-DDR-INDEX.md
+```
+
+**HALT if the file does not exist:** `DDR index file not found at docs/specs/<InputBundle.projectId>-ddrs/00-DDR-INDEX.md. Step 11 did not complete successfully. Resolve Step 11 before proceeding.`
+
+`<InputBundle.projectId>` in the command above is a documentation placeholder — the executing agent substitutes the confirmed `projectId` value before running this command.
+
+Stage exactly these four items — no others:
+
+```bash
+git add .gitignore HOMELAB-CLAUDE.md.template .claude/commands/relay.md docs/specs/<InputBundle.projectId>-ddrs/00-DDR-INDEX.md
 ```
 
 Run `git status` and verify that `CLAUDE.md` and `MACHINE-SETUP.md` appear as excluded (listed under gitignore-excluded files, not in the staged set). If either file appears in the staged set, do not commit — investigate and resolve before proceeding.
@@ -532,6 +553,7 @@ Record the pending action.
 | Step 6 | MACHINE-SETUP.md.template missing | Template not found at `~/runtime/agent-lore/MACHINE-SETUP.md.template`. Verify agent-lore runtime. |
 | Step 9 | gh repo create fails | Exact gh CLI error surfaced. If name conflict: accept alternate name from Danny and retry. All other errors: HALT. |
 | Step 10 | git remote add fails | Exact git error surfaced. |
+| Step 12 | DDR index file not found before git add | `DDR index file not found at docs/specs/<InputBundle.projectId>-ddrs/00-DDR-INDEX.md. Step 11 did not complete successfully. Resolve Step 11 before proceeding.` |
 | Step 12 | git push fails | Exact error surfaced. If SSH error: direct Danny to MACHINE-SETUP.md. Repo left in local-only valid state. No retry. |
 
 ### Non-blocking Failures
@@ -547,5 +569,6 @@ Record the pending action.
 |------|-----------|--------|
 | Step 1 | projectId is not kebab-case | Re-prompt for projectId only. |
 | Step 1 | visibility is not `public` or `private` | Re-prompt for visibility only. |
+| Step 1 | `projectContext` is empty or whitespace-only | Re-prompt for `projectContext` only. All previously collected fields retained. |
 | Step 2 | Proposed name collides with registry entry | Discard name; propose new name with distinct etymology; repeat registry check. |
 | Step 2 | Danny rejects proposed name | Propose new name with distinct etymology; repeat from Step 2.3. |
