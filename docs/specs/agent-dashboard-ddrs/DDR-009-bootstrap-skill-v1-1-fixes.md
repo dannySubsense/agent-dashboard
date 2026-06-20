@@ -5,7 +5,7 @@
 - **Date:** 2026-06-20
 - **Sprint (on approval):** bootstrap-skill-v1-1
 - **Supersedes:** DDR-001 (partial — two omissions corrected)
-- **GitHub issue:** (to be created)
+- **GitHub issue:** #1
 
 ---
 
