@@ -5,7 +5,7 @@ Living backlog and build-order rationale for the agent-dashboard project.
 | # | Title | Status | Sprint | Depends On | Scope |
 |---|---|---|---|---|---|
 | 001 | Homelab Project Bootstrap Skill | ACCEPTED | bootstrap-skill-v1 | — | Platform tooling |
-| 002 | Dashboard Framework and Architecture | PROPOSED | dashboard-framework-v1 | — | Core architecture |
+| 002 | Dashboard Framework and Architecture | ACCEPTED | dashboard-framework-v1 | — | Core architecture |
 | 003 | Project Discovery and Card Panel | BACKLOG | tbd | 002 | Feature |
 | 004 | DDR Pipeline Panel | BACKLOG | tbd | 002 | Feature |
 | 005 | Activity Feed | BACKLOG | tbd | 002 | Feature |

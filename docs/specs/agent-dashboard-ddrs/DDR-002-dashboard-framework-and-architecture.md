@@ -1,6 +1,6 @@
 # DDR-002 — Dashboard Framework and Architecture
 
-- **Status:** PROPOSED
+- **Status:** ACCEPTED
 - **Author:** lumen
 - **Date:** 2026-06-20
 - **Sprint (on approval):** dashboard-framework-v1
@@ -41,10 +41,12 @@ A project card should tell you enough to decide whether to open a terminal. That
 
 ### 3.2 Deployment
 
-- Runs on **VM 101** as a persistent Node.js process (managed by PM2 or systemd — decided in sprint)
-- Accessible at `http://localhost:3000` locally and over **Tailscale VPN** at the VM's Tailscale IP on port 3000
+- Runs on **VM 101** as a persistent Node.js process managed by **PM2** (Node-native, auto-restart on crash, log management built in; systemd is overkill for a single Node app)
+- Port: **3000** (confirmed clear — Dillon and Beta confirmed 2026-06-20; VM 101 port map: 3001/8000 gap-lens-dilution, 3200/8200 gap-lens-dilution-filter)
+- Accessible locally and over **Tailscale VPN** at the VM's Tailscale IP on the confirmed port
 - No public internet exposure — Tailscale network only
 - No auth layer — Tailscale network membership is the access control
+- Port inventory visibility is a first-class dashboard feature (surfaces occupied ports across all projects)
 
 ### 3.3 Data Sources
 
@@ -53,7 +55,7 @@ A project card should tell you enough to decide whether to open a terminal. That
 | **LORE** | Session-close summaries, decisions, HALTs, last capture per project | Direct Postgres query to VM 103 (`100.127.177.103:5432/lore`) over Tailscale |
 | **Local git** | Last commit date/message, branch, uncommitted changes per repo | `simple-git` npm package; reads `~/projects/` directory |
 | **GitHub API** | Open PRs, open issues, CI status per repo | GitHub REST API v3 via `@octokit/rest`; PAT auth |
-| **Switchboard** | Recent relay messages, active locks, online agents | Read Switchboard data files directly or via MCP tools — decided in sprint |
+| **Switchboard** | Active agents, pending message counts, relay event history, active locks | Direct filesystem reads from `~/.switchboard/` — plain JSON/JSONL files; no MCP tools or dedicated agent needed |
 | **Local filesystem** | DDR index status, PROGRESS.md sprint state, CLAUDE.md agent name + projectId | Node.js `fs` reads; parsed at request time |
 
 All data fetching happens server-side in Next.js API routes or Server Components. No credentials in the browser.
@@ -142,9 +144,9 @@ DDR-001 (`bootstrap-skill-v1`) runs in parallel — it is independent of the das
 
 ---
 
-## §6 Open Questions for Danny
+## §6 Open Questions
 
-1. **Process manager** — PM2 or systemd for keeping the dashboard process alive on VM 101?
-2. **Port** — 3000 is the Next.js default; any conflict with other services on VM 101?
-3. **Switchboard interface** — read data files directly from the filesystem or use MCP tools from a server-side context? (MCP tools may not be available outside Claude Code sessions.)
-4. **Dashboard DDRs as their own sprint each** — confirmed? Or batch the simpler panels (DDR pipeline + open work tracker) into one sprint?
+1. **Process manager** — ~~PM2 or systemd?~~ **Resolved: PM2.** (2026-06-20)
+2. **Port** — ~~awaiting port inventory~~ **Resolved: port 3000.** Confirmed clear by Dillon and Beta 2026-06-20.
+3. **Switchboard interface** — ~~pending architecture review~~ **Resolved: direct filesystem reads from `~/.switchboard/`.** Switchboard is fully file-based (plain JSON/JSONL). Dashboard API routes read `sessions.json` (active agents), `messages.json` (pending counts), `history.jsonl` (event log), and `locks.json` (active locks) directly via Node.js `fs`. No MCP tools or dedicated Switchboard agent required. (2026-06-20)
+4. **Sprint batching** — ~~confirmed each panel gets its own sprint?~~ **Resolved: one sprint per feature; DDR-004 (pipeline) and DDR-007 (open work) may batch if both remain simple after spec.** (2026-06-20)
