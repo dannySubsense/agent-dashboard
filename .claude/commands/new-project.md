@@ -442,3 +442,110 @@ git remote add origin "git@github.com-danny:dannySubsense/<InputBundle.repoName>
 Verification: run `git remote -v` — output must show `origin` using the `github.com-danny` SSH alias.
 
 If the remote add fails for any reason, HALT and surface the exact error to Danny.
+
+---
+
+## Step 11 — DDR Directory Bootstrap
+
+Run:
+
+```bash
+mkdir -p docs/specs/<InputBundle.projectId>-ddrs/
+```
+
+Write `docs/specs/<InputBundle.projectId>-ddrs/00-DDR-INDEX.md` with this exact stub content (resolving `InputBundle.projectId` and `InputBundle.projectName` from the values confirmed in Step 1):
+
+```markdown
+# DDR Index — <InputBundle.projectName>
+
+| # | Title | Status |
+|---|-------|--------|
+```
+
+---
+
+## Step 12 — Initial Commit and Push
+
+Stage exactly these three items — no others:
+
+```bash
+git add .gitignore HOMELAB-CLAUDE.md.template .claude/commands/relay.md
+```
+
+Run `git status` and verify that `CLAUDE.md` and `MACHINE-SETUP.md` appear as excluded (listed under gitignore-excluded files, not in the staged set). If either file appears in the staged set, do not commit — investigate and resolve before proceeding.
+
+Commit with this exact message — no variation:
+
+```bash
+git commit -m "chore: project bootstrap"
+```
+
+Push:
+
+```bash
+git push origin main
+```
+
+Error handling:
+
+- HALT on push failure. Do not retry silently. Report the exact error to Danny.
+- If push fails with an SSH error, direct Danny to `MACHINE-SETUP.md` SSH alias setup section.
+- The repo is left in a valid local-only state.
+
+---
+
+## Step 13 — LORE Bootstrap Capture
+
+Construct and call:
+
+```
+capture_memory({
+  projectId:     InputBundle.projectId,
+  author:        AgentIdentity.slug,
+  documentType:  "decision",
+  epistemicType: "FACT",
+  status:        "locked",
+  content:       <narrative>
+})
+```
+
+The content narrative must include at minimum: agent name, author slug, relay handle, etymology, workflow pattern (DDR → spec → forge), project roles (Composer: Danny, Producer: AgentIdentity.name, Frank: /senior-qc), and bootstrap date.
+
+If `capture_memory` fails, do not halt. Surface to Danny:
+
+> LORE bootstrap capture failed. Re-run capture_memory manually before closing this session.
+
+Record the pending action.
+
+---
+
+## Error Reference
+
+### Halt Conditions
+
+| Step | Condition | HALT message |
+|------|-----------|--------------|
+| Pre-flight | git not found | `git --version` returned non-zero. Install git before running /new-project. |
+| Pre-flight | gh CLI not authenticated or wrong account | `gh auth status` failed or shows account other than dannySubsense. Run `gh auth login` as dannySubsense. |
+| Pre-flight | LORE gateway unreachable | `check_health` failed. Verify lore-gateway MCP is registered and LORE DB is reachable over Tailscale. |
+| Step 4 | HOMELAB-CLAUDE.md.template missing | Template not found at `~/runtime/agent-lore/HOMELAB-CLAUDE.md.template`. Verify agent-lore runtime. |
+| Step 6 | MACHINE-SETUP.md.template missing | Template not found at `~/runtime/agent-lore/MACHINE-SETUP.md.template`. Verify agent-lore runtime. |
+| Step 9 | gh repo create fails | Exact gh CLI error surfaced. If name conflict: accept alternate name from Danny and retry. All other errors: HALT. |
+| Step 10 | git remote add fails | Exact git error surfaced. |
+| Step 12 | git push fails | Exact error surfaced. If SSH error: direct Danny to MACHINE-SETUP.md. Repo left in local-only valid state. No retry. |
+
+### Non-blocking Failures
+
+| Step | Condition | Surface message |
+|------|-----------|-----------------|
+| Step 3 | Cairn send_message fails | Cairn registration pending — Switchboard unavailable. Send registration manually at next relay session. |
+| Step 13 | capture_memory fails | LORE bootstrap capture failed. Re-run capture_memory manually before closing this session. |
+
+### Validation Loops
+
+| Step | Condition | Action |
+|------|-----------|--------|
+| Step 1 | projectId is not kebab-case | Re-prompt for projectId only. |
+| Step 1 | visibility is not `public` or `private` | Re-prompt for visibility only. |
+| Step 2 | Proposed name collides with registry entry | Discard name; propose new name with distinct etymology; repeat registry check. |
+| Step 2 | Danny rejects proposed name | Propose new name with distinct etymology; repeat from Step 2.3. |
