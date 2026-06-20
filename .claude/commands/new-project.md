@@ -49,3 +49,58 @@ Danny must supply the following fields before any action proceeds. All fields mu
 | `repoDescription` | One sentence; passed verbatim to `gh repo create --description` |
 | `visibility` | Exactly `public` or `private` — no other values accepted |
 | `agentName` | Declared by the executing agent during Step 2 (vision quest) — NOT collected from Danny upfront; agent proposes, Danny confirms |
+
+---
+
+## Pre-flight Validation
+
+Pre-flight runs after Step 1 input confirmation and before Step 2 (vision quest). All five checks must complete before any write or system operation begins.
+
+**HALT checks are blocking.** If any HALT check fails, execution stops immediately. No file is written, no command is run, and no step proceeds. Resolve the reported issue and re-invoke `/new-project`.
+
+**WARN and NOTE checks are non-blocking.** Bootstrap may continue with the issue acknowledged.
+
+---
+
+### Check 1 — git installed
+
+- **Command:** `git --version`
+- **Pass condition:** Exit code 0
+- **Severity:** HALT
+- **Failure message:** `` `git --version` returned non-zero. Install git before running /new-project. ``
+
+---
+
+### Check 2 — gh CLI authenticated as dannySubsense
+
+- **Command:** `gh auth status`
+- **Pass condition:** Output contains `dannySubsense`
+- **Severity:** HALT
+- **Failure message:** `` `gh auth status` failed or shows account other than dannySubsense. Run `gh auth login` as dannySubsense. ``
+
+---
+
+### Check 3 — LORE gateway reachable
+
+- **Tool:** `mcp__lore-gateway__check_health`
+- **Pass condition:** Returns healthy status
+- **Severity:** HALT
+- **Failure message:** `` `check_health` failed. Verify lore-gateway MCP is registered and LORE DB is reachable over Tailscale. ``
+
+---
+
+### Check 4 — SSH alias configured
+
+- **Command:** `grep -c "github.com-danny" ~/.ssh/config`
+- **Pass condition:** Result ≥ 1
+- **Severity:** WARN (non-blocking)
+- **Failure message:** `SSH alias github.com-danny not found in ~/.ssh/config. Step 12 git push will fail. See MACHINE-SETUP.md SSH section to configure the alias before proceeding.`
+
+---
+
+### Check 5 — Switchboard available
+
+- **Tool:** `relay_status` or `send_message` dry-run
+- **Pass condition:** Responds without error
+- **Severity:** NOTE (non-blocking)
+- **Failure message:** `Switchboard unavailable. Step 3 Cairn registration will be surfaced as a pending action.`
