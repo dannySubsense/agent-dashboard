@@ -1,9 +1,9 @@
 # DDR-011 — Pending Setup Projects and Explicit Project Paths
 
-- **Status:** PROPOSED
+- **Status:** ACCEPTED (shipped, commits 998dbb1–fe6ecc5)
 - **Author:** lumen
 - **Date:** 2026-06-21
-- **Sprint (on approval):** tbd
+- **Sprint:** project-discovery-v1
 - **Supersedes:** —
 
 ---

@@ -1,9 +1,9 @@
 # DDR-003 — Project Discovery and Card Panel
 
-- **Status:** PROPOSED
+- **Status:** ACCEPTED (shipped, commits 998dbb1–fe6ecc5)
 - **Author:** lumen
 - **Date:** 2026-06-21
-- **Sprint (on approval):** tbd
+- **Sprint:** project-discovery-v1
 - **Supersedes:** —
 
 ---

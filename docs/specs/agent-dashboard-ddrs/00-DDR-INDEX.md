@@ -6,15 +6,15 @@ Living backlog and build-order rationale for the agent-dashboard project.
 |---|---|---|---|---|---|
 | 001 | Homelab Project Bootstrap Skill | ACCEPTED | bootstrap-skill-v1 | — | Platform tooling |
 | 002 | Dashboard Framework and Architecture | ACCEPTED | dashboard-framework-v1 | — | Core architecture |
-| 003 | Project Discovery and Card Panel | PROPOSED | tbd | 002 | Feature |
+| 003 | Project Discovery and Card Panel | ACCEPTED | project-discovery-v1 | 002 | Feature |
 | 004 | DDR Pipeline Panel | BACKLOG | tbd | 002 | Feature |
 | 005 | Activity Feed | BACKLOG | tbd | 002 | Feature |
 | 006 | Agent Status Panel | BACKLOG | tbd | 002 | Feature |
 | 007 | Open Work Tracker | BACKLOG | tbd | 002 | Feature |
 | 008 | "Where Did I Leave Off?" Panel | BACKLOG | tbd | 002 | Feature |
 | 009 | Bootstrap Skill v1.1 Fixes | DRAFT | bootstrap-skill-v1-1 | 001 | Platform tooling |
-| 010 | Dark Mode | PROPOSED | tbd | 002 | UI/Platform |
-| 011 | Pending Setup Projects and Explicit Project Paths | PROPOSED | tbd | 003 | Feature |
+| 010 | Dark Mode | ACCEPTED | dark-mode-v1 | 002 | UI/Platform |
+| 011 | Pending Setup Projects and Explicit Project Paths | ACCEPTED | project-discovery-v1 | 003 | Feature |
 
 ---
 
