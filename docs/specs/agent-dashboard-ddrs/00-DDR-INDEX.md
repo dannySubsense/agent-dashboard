@@ -6,13 +6,14 @@ Living backlog and build-order rationale for the agent-dashboard project.
 |---|---|---|---|---|---|
 | 001 | Homelab Project Bootstrap Skill | ACCEPTED | bootstrap-skill-v1 | — | Platform tooling |
 | 002 | Dashboard Framework and Architecture | ACCEPTED | dashboard-framework-v1 | — | Core architecture |
-| 003 | Project Discovery and Card Panel | BACKLOG | tbd | 002 | Feature |
+| 003 | Project Discovery and Card Panel | PROPOSED | tbd | 002 | Feature |
 | 004 | DDR Pipeline Panel | BACKLOG | tbd | 002 | Feature |
 | 005 | Activity Feed | BACKLOG | tbd | 002 | Feature |
 | 006 | Agent Status Panel | BACKLOG | tbd | 002 | Feature |
 | 007 | Open Work Tracker | BACKLOG | tbd | 002 | Feature |
 | 008 | "Where Did I Leave Off?" Panel | BACKLOG | tbd | 002 | Feature |
 | 009 | Bootstrap Skill v1.1 Fixes | DRAFT | bootstrap-skill-v1-1 | 001 | Platform tooling |
+| 010 | Dark Mode | PROPOSED | tbd | 002 | UI/Platform |
 
 ---
 
@@ -29,6 +30,8 @@ Living backlog and build-order rationale for the agent-dashboard project.
 **DDR-001 and DDR-002 sprints run in parallel** — they are independent.
 
 **DDR-009** corrects two omissions from bootstrap-skill-v1 (DDR-001): the DDR index is now staged in the bootstrap commit, and projectContext is collected as a 5th input field to complete CLAUDE.md on first run.
+
+**DDR-010** is a UI/Platform cross-cut — it applies to all six panels and should be resolved before or alongside any panel sprint to avoid per-panel dark mode retrofits.
 
 ---
 
