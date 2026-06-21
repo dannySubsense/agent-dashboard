@@ -14,6 +14,7 @@ Living backlog and build-order rationale for the agent-dashboard project.
 | 008 | "Where Did I Leave Off?" Panel | BACKLOG | tbd | 002 | Feature |
 | 009 | Bootstrap Skill v1.1 Fixes | DRAFT | bootstrap-skill-v1-1 | 001 | Platform tooling |
 | 010 | Dark Mode | PROPOSED | tbd | 002 | UI/Platform |
+| 011 | Pending Setup Projects and Explicit Project Paths | PROPOSED | tbd | 003 | Feature |
 
 ---
 

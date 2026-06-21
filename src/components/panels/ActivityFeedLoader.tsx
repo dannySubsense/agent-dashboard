@@ -16,8 +16,7 @@ export async function ActivityFeedLoader() {
 
   try {
     const since = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
-    const projectsRoot = optionalEnv('PROJECTS_ROOT', path.join(os.homedir(), 'projects'));
-    const projects = await discoverProjects(projectsRoot);
+    const projects = await discoverProjects();
     const projectIds = projects.map(p => p.projectId).filter(Boolean) as string[];
 
     const [loreEvents, ...restEvents] = await Promise.all([

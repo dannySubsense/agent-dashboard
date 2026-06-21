@@ -18,72 +18,75 @@ import type { DiscoveredProject } from '@/types';
 // Re-export for caller convenience (api routes, panels, projects.ts)
 export { parseCLAUDEMd };
 
-/**
- * Scans one level of projectsRoot for directories containing a .git subdirectory.
- *
- * For each found repo:
- *   - Reads CLAUDE.md (if present) and calls parseCLAUDEMd
- *   - Calls getGitHubRemote() to populate githubRemote
- *
- * Default projectsRoot: PROJECTS_ROOT env var, falling back to ~/projects.
- * Returns [] (not throws) if projectsRoot is unreadable or does not exist.
- * Does not recurse.
- */
-export async function discoverProjects(
-  projectsRoot?: string
-): Promise<DiscoveredProject[]> {
-  const root =
-    projectsRoot ??
-    optionalEnv('PROJECTS_ROOT', path.join(os.homedir(), 'projects'));
-
-  let dirents: import('fs').Dirent[];
+async function probeRepo(repoPath: string): Promise<DiscoveredProject | null> {
   try {
-    dirents = await fs.readdir(root, { withFileTypes: true });
+    await fs.stat(path.join(repoPath, '.git'));
   } catch {
-    // Root directory is unreadable or does not exist
-    return [];
+    return null;
   }
 
+  let projectId: string | null = null;
+  let agentName: string | null = null;
+  try {
+    const claudeContent = await fs.readFile(
+      path.join(repoPath, 'CLAUDE.md'),
+      'utf-8'
+    );
+    const parsed = parseCLAUDEMd(claudeContent);
+    projectId = parsed.projectId;
+    agentName = parsed.agentName;
+  } catch {
+    // CLAUDE.md missing or unreadable
+  }
+
+  return {
+    repoPath,
+    repoName: path.basename(repoPath),
+    projectId,
+    agentName,
+    githubRemote: await getGitHubRemote(repoPath),
+  };
+}
+
+/**
+ * Discovers projects from two env vars:
+ *
+ * PROJECTS_ROOT — colon-separated parent directories scanned one level deep
+ *                 for git repos. Defaults to ~/projects if neither var is set.
+ * PROJECT_PATHS — colon-separated explicit repo paths added directly.
+ *
+ * Results are deduplicated by repoPath.
+ */
+export async function discoverProjects(overrideRoot?: string): Promise<DiscoveredProject[]> {
+  const seen = new Set<string>();
   const results: DiscoveredProject[] = [];
 
-  for (const dirent of dirents) {
-    if (!dirent.isDirectory()) continue;
+  async function add(repoPath: string) {
+    const resolved = path.resolve(repoPath);
+    if (seen.has(resolved)) return;
+    seen.add(resolved);
+    const project = await probeRepo(resolved);
+    if (project) results.push(project);
+  }
 
-    const repoPath = path.join(root, dirent.name);
-    const gitDir = path.join(repoPath, '.git');
-
-    // Confirm .git subdirectory exists
+  // Scan parent directories one level deep
+  const rootsEnv = overrideRoot ?? optionalEnv('PROJECTS_ROOT', path.join(os.homedir(), 'projects'));
+  for (const root of rootsEnv.split(':').map(p => p.trim()).filter(Boolean)) {
+    let dirents: import('fs').Dirent[];
     try {
-      await fs.stat(gitDir);
+      dirents = await fs.readdir(root, { withFileTypes: true });
     } catch {
-      continue; // Not a git repository
+      continue;
     }
-
-    // Parse CLAUDE.md (best-effort)
-    let projectId: string | null = null;
-    let agentName: string | null = null;
-    try {
-      const claudeContent = await fs.readFile(
-        path.join(repoPath, 'CLAUDE.md'),
-        'utf-8'
-      );
-      const parsed = parseCLAUDEMd(claudeContent);
-      projectId = parsed.projectId;
-      agentName = parsed.agentName;
-    } catch {
-      // CLAUDE.md missing or unreadable — leave fields null
+    for (const dirent of dirents) {
+      if (dirent.isDirectory()) await add(path.join(root, dirent.name));
     }
+  }
 
-    // Resolve GitHub remote (best-effort)
-    const githubRemote = await getGitHubRemote(repoPath);
-
-    results.push({
-      repoPath,
-      repoName: dirent.name,
-      projectId,
-      agentName,
-      githubRemote,
-    });
+  // Add explicit individual repo paths
+  const pathsEnv = optionalEnv('PROJECT_PATHS', '');
+  for (const p of pathsEnv.split(':').map(s => s.trim()).filter(Boolean)) {
+    await add(p);
   }
 
   return results;
