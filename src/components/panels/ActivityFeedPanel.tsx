@@ -24,7 +24,7 @@ const TYPE_LABELS: Record<ActivityEventType, string> = {
 };
 
 const TYPE_DOT_CLASSES: Record<ActivityEventType, string> = {
-  'lore-capture': 'bg-violet-500',
+  'lore-capture': 'bg-status-lore-capture',
   'git-commit': 'bg-sky-500',
   'pr-merge': 'bg-emerald-500',
 };
