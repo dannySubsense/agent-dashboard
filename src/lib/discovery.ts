@@ -13,6 +13,7 @@ import os from 'os';
 import { parseCLAUDEMd } from './claude-md';
 import { getGitHubRemote } from './git';
 import { optionalEnv } from './env';
+import { readConfigFile } from './config';
 import type { DiscoveredProject } from '@/types';
 
 // Re-export for caller convenience (api routes, panels, projects.ts)
@@ -86,6 +87,12 @@ export async function discoverProjects(overrideRoot?: string): Promise<Discovere
   // Add explicit individual repo paths
   const pathsEnv = optionalEnv('PROJECT_PATHS', '');
   for (const p of pathsEnv.split(':').map(s => s.trim()).filter(Boolean)) {
+    await add(p);
+  }
+
+  // Source 3: config file (~/.config/agent-dashboard/projects.json)
+  const config = await readConfigFile();
+  for (const p of config.projectPaths) {
     await add(p);
   }
 
