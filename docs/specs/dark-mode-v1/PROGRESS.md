@@ -1,16 +1,15 @@
 # Progress: dark-mode-v1
 
-## Status: IN_PROGRESS
+## Status: COMPLETE
 
 ## Slices
-- [ ] Slice 1: CSS Foundation — PENDING
-- [ ] Slice 2: Component Class Replacement — PENDING
-- [ ] Slice 3: Dot Badge Contrast Verification — PENDING
-- [ ] Slice 4: Full Visual Verification — PENDING
+- [x] Slice 1: CSS Foundation — COMPLETE (commit 520fb40)
+- [x] Slice 2: Component Class Replacement — COMPLETE (commit 466d987)
+- [x] Slice 3: Dot Badge Contrast Verification — COMPLETE (commit 466d987)
+- [x] Slice 4: Full Visual Verification — COMPLETE (Danny visual sign-off 2026-06-21)
 
 ## Current
-Slice: 1
-Step: @code-executor
+All slices complete.
 Last updated: 2026-06-21
 
 ## Fix Attempts
