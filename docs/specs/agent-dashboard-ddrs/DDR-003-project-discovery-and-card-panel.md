@@ -24,7 +24,7 @@ Discovery is filesystem-first: scan git repos on the local filesystem, enrich wi
 
 `PROJECTS_ROOT` must be flexible enough to cover Danny's full project spread without requiring changes to application code — configuration, not code. A comma-separated list of absolute paths covers the foreseeable cases without introducing glob complexity.
 
-Failure in one configured path must not degrade discovery of others. The dashboard should always surface what it can.
+Failure in one configured path must not degrade discovery of others. The dashboard should always surface what it can. Project paths can also be added directly from the dashboard UI — no manual env file edits required after initial bootstrap.
 
 ---
 
@@ -50,16 +50,44 @@ When `PROJECTS_ROOT` is unset, `discoverProjects()` falls back to `~/projects/` 
 4. De-duplicate discovered repos by resolved absolute path — if the same `.git` directory appears via two configured roots, include it once.
 5. After filesystem discovery, enrich each repo with LORE and GitHub data as today (unchanged).
 
-### 3.3 Card Enhancements
+### 3.3 Persistent Project Config File
+
+A local config file `~/.config/agent-dashboard/projects.json` stores project paths added via the UI. The app reads this file on every discovery pass and merges its entries with `PROJECTS_ROOT` and `PROJECT_PATHS` env vars (deduplicated by resolved absolute path).
+
+Format:
+```json
+{
+  "projectPaths": [
+    "/home/d-tuned/some/repo",
+    "/opt/another/repo"
+  ]
+}
+```
+
+The file is created on first write if it does not exist. Read failures are silently skipped — env var discovery proceeds normally.
+
+An API route `POST /api/projects/paths` accepts `{ path: string }` and appends it to the config file (after validating that a `.git` directory exists at the given path). The route returns the updated project list.
+
+### 3.4 "Add Project" UI Input
+
+The Project Cards panel includes an "Add project" input at the top (or bottom) of the panel. Danny pastes an absolute path, submits, and the panel refreshes to show the new project card. No filesystem browser — path entry only.
+
+The input calls `POST /api/projects/paths`. On success, the project card appears immediately. On error (path not a git repo, path unreadable), an inline error message is shown.
+
+This replaces the need to manually edit `.env.local` for scattered repos.
+
+### 3.5 Card Enhancements
 
 Card enhancements beyond the DDR-002 baseline are deferred to spec phase. The spec agent will assess whether any additional data fields are warranted given the updated discovery scope. No card changes are pre-committed in this DDR.
 
-### 3.4 Environment Variable Inventory (updated)
+### 3.6 Environment Variable Inventory (updated)
 
 ```
 GITHUB_TOKEN=          # PAT with repo scope (dannySubsense)
 LORE_DATABASE_URL=     # postgres://lore:<pw>@100.127.177.103:5432/lore?sslmode=disable
 PROJECTS_ROOT=         # comma-separated absolute paths; default ~/projects/
+
+~/.config/agent-dashboard/projects.json   # UI-managed project paths; merged with env vars
 ```
 
 This supersedes the `PROJECTS_ROOT` stub in DDR-002 §3.7.
@@ -74,6 +102,8 @@ This supersedes the `PROJECTS_ROOT` stub in DDR-002 §3.7.
 | Deep recursive scan | Prohibitively expensive on large directory trees; the value of surfacing deeply nested repos does not justify the latency cost |
 | Glob patterns in `PROJECTS_ROOT` | Adds shell-expansion complexity and cross-platform inconsistency with minimal practical gain over comma-separated explicit paths |
 | Single `PROJECTS_ROOT` path | Too restrictive; Danny's projects are spread across at least two top-level directories; multi-path is required on day one |
+| LORE database for path storage | Overkill for a path list; adds DB dependency to a config concern; LORE is for knowledge captures, not app config |
+| Filesystem browser/picker UI | Unnecessary complexity for a single-user homelab tool where paths are known; paste input is sufficient |
 
 ---
 
