@@ -29,13 +29,14 @@ const TYPE_DOT_CLASSES: Record<ActivityEventType, string> = {
   'pr-merge': 'bg-emerald-500',
 };
 
-function formatAbsoluteTimestamp(date: Date): string {
-  const y = date.getFullYear();
-  const mo = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  const h = String(date.getHours()).padStart(2, '0');
-  const m = String(date.getMinutes()).padStart(2, '0');
-  return `${y}-${mo}-${d} ${h}:${m}`;
+function formatAbsoluteTimestamp(date: Date | string | number): string {
+  const d = new Date(date)
+  const yyyy = d.getUTCFullYear()
+  const mm = String(d.getUTCMonth() + 1).padStart(2, '0')
+  const dd = String(d.getUTCDate()).padStart(2, '0')
+  const hh = String(d.getUTCHours()).padStart(2, '0')
+  const min = String(d.getUTCMinutes()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd} ${hh}:${min}`
 }
 
 export function ActivityFeedPanel({ initialData }: ActivityFeedPanelProps) {
@@ -151,7 +152,7 @@ export function ActivityFeedPanel({ initialData }: ActivityFeedPanelProps) {
                   <span className="font-medium text-foreground">
                     {TYPE_LABELS[event.type]}
                   </span>
-                  <span>{event.repoName}</span>
+                  <span className="text-sm">{event.repoName}</span>
                 </div>
                 <p className="mt-0.5 truncate text-sm">{event.summary}</p>
               </div>

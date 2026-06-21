@@ -129,7 +129,7 @@ function DdrCard({
       </div>
 
       {/* Repo name (muted) */}
-      <div className="text-xs text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap">
+      <div className="text-sm text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap">
         {entry.repoName}
       </div>
 
