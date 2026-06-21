@@ -11,6 +11,9 @@
  * - ProjectCardsPanel is async; called directly then rendered: render(await ProjectCardsPanel())
  */
 
+const mockRefresh = vi.hoisted(() => vi.fn())
+vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: mockRefresh }) }))
+
 import '@testing-library/jest-dom/vitest';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
