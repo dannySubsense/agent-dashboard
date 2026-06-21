@@ -27,6 +27,10 @@ class InMemoryCache {
     return Date.now() - entry.fetchedAt < entry.ttlMs;
   }
 
+  delete(key: string): void {
+    this.store.delete(key);
+  }
+
   clear(): void {
     this.store.clear();
   }

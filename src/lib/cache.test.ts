@@ -6,11 +6,17 @@
  * - cache.isValid returns false after TTL expires
  * - cache.clear empties the cache
  * - cache.set overwrites an existing key
+ *
+ * Acceptance criteria covered (Slice 1 — Types + Cache Foundation):
+ * - cache.delete removes a previously-set key (get returns null after delete)
+ * - cache.delete on a nonexistent key is a no-op (no error thrown)
+ * - cache.delete does not affect other keys in the store
+ * - ProjectsConfig is importable from @/types with the correct shape (compile-time)
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { cache } from './cache';
-import type { CacheEntry } from '@/types';
+import type { CacheEntry, ProjectsConfig } from '@/types';
 
 beforeEach(() => {
   cache.clear();
@@ -77,5 +83,39 @@ describe('cache.clear', () => {
 
     expect(cache.get<number>('x')).toBeNull();
     expect(cache.get<string>('y')).toBeNull();
+  });
+});
+
+describe('cache.delete', () => {
+  it('removes a previously-set key so get returns null after delete', () => {
+    cache.set('projects', ['repo-a']);
+
+    cache.delete('projects');
+
+    expect(cache.get<string[]>('projects')).toBeNull();
+  });
+
+  it('is a no-op when the key does not exist — does not throw', () => {
+    expect(() => cache.delete('nonexistent')).not.toThrow();
+  });
+
+  it('does not affect other keys when a specific key is deleted', () => {
+    cache.set('projects', ['repo-a']);
+    cache.set('other', 'keep-me');
+
+    cache.delete('projects');
+
+    expect(cache.get<string>('other')).not.toBeNull();
+    expect(cache.get<string>('other')!.data).toBe('keep-me');
+  });
+});
+
+describe('ProjectsConfig type', () => {
+  it('is importable from @/types with the expected projectPaths shape', () => {
+    // Compile-time verification: TypeScript will error here if the type is missing
+    // or if projectPaths is not string[].
+    const config: ProjectsConfig = { projectPaths: ['/home/d-tuned/projects/some-repo'] };
+    expect(Array.isArray(config.projectPaths)).toBe(true);
+    expect(config.projectPaths[0]).toBe('/home/d-tuned/projects/some-repo');
   });
 });

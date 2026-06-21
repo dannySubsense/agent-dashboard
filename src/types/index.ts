@@ -13,6 +13,10 @@ export interface DiscoveredProject {
   // GitHub lib functions are skipped for this repo when null.
 }
 
+export interface ProjectsConfig {
+  projectPaths: string[];
+}
+
 // ── Git ───────────────────────────────────────────────────────────────────
 
 export interface GitCommit {
