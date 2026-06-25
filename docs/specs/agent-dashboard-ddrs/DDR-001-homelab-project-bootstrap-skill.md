@@ -58,7 +58,7 @@ The skill walks the producer agent through these steps in sequence:
 | Branch name | `main` | Standard |
 | SSH remote alias | `github.com-danny` | Required on this shared machine |
 | git config scope | per-repo only | `~/.gitconfig` belongs to Major Tom |
-| LORE DB | `100.127.177.103:5432/lore` | Tailscale Postgres on VM 103 |
+| LORE DB | `<lore-db-host>:5432/lore` | Tailscale Postgres on VM 103 |
 
 ### 3.4 Variable Inputs (ask Danny)
 

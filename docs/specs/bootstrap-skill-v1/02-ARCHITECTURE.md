@@ -468,7 +468,7 @@ These values are encoded directly in the command text. The agent must never ask 
 | Branch name | `main` | Standard |
 | SSH remote alias | `github.com-danny` | Required on this shared machine (another identity owns default ssh config) |
 | git config scope | per-repo (no `--global`, no `--system`) | `~/.gitconfig` belongs to Major Tom |
-| LORE DB | `100.127.177.103:5432/lore` | Tailscale Postgres on VM 103 |
+| LORE DB | `<lore-db-host>:5432/lore` | Tailscale Postgres on VM 103 |
 | Template source dir | `~/runtime/agent-lore/` | Owned by agent-lore; read-only from this skill |
 | HOMELAB-CLAUDE.md template filename | `HOMELAB-CLAUDE.md.template` | Established filename |
 | MACHINE-SETUP.md template filename | `MACHINE-SETUP.md.template` | Established filename |

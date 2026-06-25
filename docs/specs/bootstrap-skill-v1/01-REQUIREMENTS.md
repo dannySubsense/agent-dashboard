@@ -246,5 +246,5 @@ so that a future agent session can fully reconstruct the project's founding cont
 - Assumes: The `lore-gateway` MCP is available in the Claude Code session (registered system-wide at `~/.claude.json`).
 - Assumes: The `github.com-danny` SSH alias is configured in `~/.ssh/config`; if absent, MACHINE-SETUP.md documents the setup procedure.
 - Assumes: Cairn is a known relay agent reachable via send_message; if not, bootstrap proceeds and registration is deferred.
-- Assumes: LORE DB at `100.127.177.103:5432/lore` is reachable over Tailscale during the LORE capture step.
+- Assumes: LORE DB at `<lore-db-host>:5432/lore` is reachable over Tailscale during the LORE capture step.
 - Assumes: The machine's global `~/.gitconfig` is owned by another identity (Major Tom) and must not be modified.

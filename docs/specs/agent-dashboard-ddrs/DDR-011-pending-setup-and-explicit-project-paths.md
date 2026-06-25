@@ -54,7 +54,7 @@ This gives Danny visibility into the full project inventory including repos queu
 
 ```
 GITHUB_TOKEN=          # gh CLI oauth token (repo scope)
-LORE_DATABASE_URL=     # postgres://lore:<pw>@100.127.177.103:5432/lore?sslmode=disable
+LORE_DATABASE_URL=     # postgres://lore:<pw>@<lore-db-host>:5432/lore?sslmode=disable
 PROJECTS_ROOT=         # colon-separated parent dirs scanned one level deep; default ~/projects
 PROJECT_PATHS=         # colon-separated explicit repo paths (not parent dirs)
 ```

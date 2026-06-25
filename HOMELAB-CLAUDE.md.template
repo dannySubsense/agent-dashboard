@@ -66,7 +66,7 @@ Database URL and OpenAI key are loaded by the gateway from `~/runtime/agent-lore
 ## Database
 
 - Project ID: `<PROJECT-ID>`
-- Backend: VM 103 Postgres at `100.127.177.103:5432/lore` over Tailscale.
+- Backend: VM 103 Postgres at `<lore-db-host>:5432/lore` over Tailscale.
 - Schema lifecycle is owned by `agent-lore`. Do not run migrations from this repo.
 
 ---
@@ -120,7 +120,7 @@ Optional in both cases — the Gateway MCP works independently. Run the dispatch
 
 ```bash
 RELAY_AGENT_ID=<AGENT-NAME> \
-DATABASE_URL=postgres://lore:<password>@100.127.177.103:5432/lore?sslmode=disable \
+DATABASE_URL=postgres://lore:<password>@<lore-db-host>:5432/lore?sslmode=disable \
 OPENAI_API_KEY=<key> \
 MCP_DEFAULT_PROJECT_ID=<PROJECT-ID> \
 npx tsx ~/runtime/agent-lore/src/relay/relay-dispatcher.ts

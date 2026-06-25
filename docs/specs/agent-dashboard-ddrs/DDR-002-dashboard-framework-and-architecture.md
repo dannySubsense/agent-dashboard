@@ -52,7 +52,7 @@ A project card should tell you enough to decide whether to open a terminal. That
 
 | Source | What We Pull | Interface |
 |---|---|---|
-| **LORE** | Session-close summaries, decisions, HALTs, last capture per project | Direct Postgres query to VM 103 (`100.127.177.103:5432/lore`) over Tailscale |
+| **LORE** | Session-close summaries, decisions, HALTs, last capture per project | Direct Postgres query to VM 103 (`<lore-db-host>:5432/lore`) over Tailscale |
 | **Local git** | Last commit date/message, branch, uncommitted changes per repo | `simple-git` npm package; reads `~/projects/` directory |
 | **GitHub API** | Open PRs, open issues, CI status per repo | GitHub REST API v3 via `@octokit/rest`; PAT auth |
 | **Switchboard** | Active agents, pending message counts, relay event history, active locks | Direct filesystem reads from `~/.switchboard/` — plain JSON/JSONL files; no MCP tools or dedicated agent needed |
@@ -110,7 +110,7 @@ The dashboard discovers projects by scanning `~/projects/` for directories conta
 
 ```
 GITHUB_TOKEN=          # PAT with repo scope (dannySubsense)
-LORE_DATABASE_URL=     # postgres://lore:<pw>@100.127.177.103:5432/lore?sslmode=disable
+LORE_DATABASE_URL=     # postgres://lore:<pw>@<lore-db-host>:5432/lore?sslmode=disable
 PROJECTS_ROOT=         # ~/projects (default)
 ```
 

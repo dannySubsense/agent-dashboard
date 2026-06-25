@@ -84,7 +84,7 @@ Card enhancements beyond the DDR-002 baseline are deferred to spec phase. The sp
 
 ```
 GITHUB_TOKEN=          # PAT with repo scope (dannySubsense)
-LORE_DATABASE_URL=     # postgres://lore:<pw>@100.127.177.103:5432/lore?sslmode=disable
+LORE_DATABASE_URL=     # postgres://lore:<pw>@<lore-db-host>:5432/lore?sslmode=disable
 PROJECTS_ROOT=         # comma-separated absolute paths; default ~/projects/
 
 ~/.config/agent-dashboard/projects.json   # UI-managed project paths; merged with env vars

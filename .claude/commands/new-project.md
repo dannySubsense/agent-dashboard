@@ -20,7 +20,7 @@ These values are locked. Never ask Danny about them.
 | Branch name | `main` |
 | SSH remote alias | `github.com-danny` |
 | git config scope | per-repo (global and system flags prohibited) |
-| LORE DB | `100.127.177.103:5432/lore` |
+| LORE DB | `<lore-db-host>:5432/lore` |
 | Template source dir | `~/runtime/agent-lore/` |
 | HOMELAB-CLAUDE.md template filename | `HOMELAB-CLAUDE.md.template` |
 | MACHINE-SETUP.md template filename | `MACHINE-SETUP.md.template` |
